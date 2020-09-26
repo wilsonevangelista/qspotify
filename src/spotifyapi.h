@@ -4,11 +4,16 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonValue>
+#include <QJsonArray>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QTimer>
+#include <QList>
 
 #include "secrets.h"
+#include "track.h"
 
 
 class SpotifyAPI: public QObject
@@ -18,7 +23,7 @@ public:
 	SpotifyAPI();
 	~SpotifyAPI();
 
-	void searchMusic(QString);
+	void searchMusic(QString );
 
 private:
 	QNetworkAccessManager qnam;
@@ -27,15 +32,17 @@ private:
 	QTimer expireTimer;
 
 	QUrl tokenUrl = QUrl("https://accounts.spotify.com/api/token"); //-H "Authorization: Basic <base64 encoded spotifyapi>"
-	QUrl trackUrl = QUrl("https://api.spotify.com/v1/tracks/"); //{id}
-	QUrl searchTrackUrl = QUrl("https://api.spotify.com/v1/search\?type=track&q=");
+	QUrl searchTrackUrl = QUrl("https://api.spotify.com/v1/search");
 
+	void searchMusicWithUrl(QUrl );
 	void getToken();
 
-public slots:
+private slots:
 	void getTokenFinished();
+	void searchTrackFinished();
 signals:
 	void tokenOK(QString);
+	void searchReturn(QList<Track> &);
 
 };
 

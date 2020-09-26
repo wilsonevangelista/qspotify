@@ -7,13 +7,17 @@ CONFIG += c++11
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/spotifyapi.cpp
+    src/playlist.cpp \
+    src/spotifyapi.cpp \
+    src/track.cpp
 
 HEADERS += \
     src/mainwindow.h \
+    src/playlist.h \
     src/secrets.h \
     src/secrets.h.tpl \
-    src/spotifyapi.h
+    src/spotifyapi.h \
+    src/track.h
 
 FORMS += \
     src/mainwindow.ui

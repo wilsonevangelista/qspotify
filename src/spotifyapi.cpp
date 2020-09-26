@@ -10,6 +10,22 @@ SpotifyAPI::~SpotifyAPI(){
 
 }
 
+void SpotifyAPI::searchMusic(QString query)
+{
+	if (accessToken.isEmpty()) return;
+
+	searchTrackUrl.setQuery("type=track&q=" + query);
+	searchMusicWithUrl(searchTrackUrl);
+}
+
+void SpotifyAPI::searchMusicWithUrl(QUrl url)
+{
+	auto req = QNetworkRequest(url);
+	req.setRawHeader("Authorization", QString(tokenType + " " + accessToken).toUtf8());
+	reply = qnam.get(req);
+	connect(reply, &QNetworkReply::finished, this, &SpotifyAPI::searchTrackFinished);
+}
+
 void SpotifyAPI::getToken(){
 	auto req = QNetworkRequest(tokenUrl);
 	QByteArray body;
@@ -34,6 +50,37 @@ void SpotifyAPI::getTokenFinished()
 	tokenType = root.value("token_type").toString();
 
 	int expires_in = root.value("expires_in").toInt();
-	expireTimer.start(expires_in * 1000);
+	if (expires_in > 0)
+		expireTimer.start(expires_in * 1000);
 	emit tokenOK(accessToken);
+}
+
+void SpotifyAPI::searchTrackFinished()
+{
+	auto tracks = QList<Track>();
+	const auto data = reply->readAll();
+	reply->deleteLater();
+	reply = nullptr;
+
+	auto document = QJsonDocument::fromJson(data);
+	auto root = document.object();
+
+	auto trackResult = root.value("tracks").toObject();
+	auto total = trackResult.value("total").toInt();
+	auto items = trackResult.value("items").toArray();
+
+	//auto nextUrl = trackResult.value("next");
+
+	for (int i = 0; i < items.size() ; i++) {
+		auto track = Track(
+					items[i].toObject().value("id").toString(),
+					items[i].toObject().value("name").toString(),
+					items[i].toObject().value("album").toObject().value("name").toString(),
+					items[i].toObject().value("artists").toArray().at(0).toObject().value("name").toString(),
+					items[i].toObject().value("preview_url").toString()
+					);
+		tracks.append(track);
+	}
+
+	emit searchReturn(tracks);
 }
