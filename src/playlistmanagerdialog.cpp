@@ -83,6 +83,7 @@ void PlayListManagerDialog::on_btnSave_pressed()
 	ui->lstPlaylist->selectAll();
 	auto items = ui->lstPlaylist->selectedItems();
 
+	playlist->clearTracks();
 	foreach (auto item, items) {
 		playlist->addTrack(item->data(Qt::UserRole).value<Track>());
 	}

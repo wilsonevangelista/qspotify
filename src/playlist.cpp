@@ -13,6 +13,10 @@ QList<Track> PlayList::getTracks()
 	return tracks;
 }
 
+void PlayList::clearTracks(){
+	tracks.clear();
+}
+
 void PlayList::addTrack(Track value)
 {
 	tracks.append(value);
@@ -47,5 +51,7 @@ QUuid PlayList::getUuid() const
 {
 	return uuid;
 }
+
+
 
 

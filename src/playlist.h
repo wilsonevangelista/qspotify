@@ -12,6 +12,7 @@ public:
 	~PlayList();
 
 	QList<Track> getTracks();
+	void clearTracks();
 	void addTrack(Track );
 	void delTrack(Track );
 
