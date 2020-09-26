@@ -86,7 +86,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QListWidget" name="listWidget"/>
+     <widget class="QListWidget" name="playlistWidget"/>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -107,13 +107,6 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Adicionar Musica</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pushButton">
         <property name="minimumSize">
          <size>
@@ -121,14 +114,8 @@
           <height>30</height>
          </size>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>30</height>
-         </size>
-        </property>
         <property name="text">
-         <string>+</string>
+         <string>Gerenciar Playlist</string>
         </property>
        </widget>
       </item>

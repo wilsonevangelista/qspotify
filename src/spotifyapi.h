@@ -24,21 +24,23 @@ public:
 	~SpotifyAPI();
 
 	void searchMusic(QString );
+	void searchNext();
+	void searchPrevious();
+	int total, offset;
 
 private:
 	QNetworkAccessManager qnam;
 	QNetworkReply *reply;
 	QString accessToken, tokenType;
 	QTimer expireTimer;
-	int total;
 
 
 	QUrl nextUrl = QUrl();
+	QUrl previousUrl = QUrl();
 	QUrl tokenUrl = QUrl("https://accounts.spotify.com/api/token"); //-H "Authorization: Basic <base64 encoded spotifyapi>"
 	QUrl searchTrackUrl = QUrl("https://api.spotify.com/v1/search");
 
 	void searchMusicWithUrl(QUrl );
-	void searchNext();
 	void getToken();
 
 private slots:

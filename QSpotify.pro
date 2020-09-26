@@ -8,19 +8,22 @@ SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/playlist.cpp \
+    src/playlistmanagerdialog.cpp \
     src/spotifyapi.cpp \
     src/track.cpp
 
 HEADERS += \
     src/mainwindow.h \
     src/playlist.h \
+    src/playlistmanagerdialog.h \
     src/secrets.h \
     src/secrets.h.tpl \
     src/spotifyapi.h \
     src/track.h
 
 FORMS += \
-    src/mainwindow.ui
+    src/mainwindow.ui \
+    src/playlistmanagerdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -24,6 +24,12 @@ void SpotifyAPI::searchNext()
 	searchMusicWithUrl(nextUrl);
 }
 
+void SpotifyAPI::searchPrevious()
+{
+	if (previousUrl.isEmpty()) return;
+	searchMusicWithUrl(previousUrl);
+}
+
 
 void SpotifyAPI::searchMusicWithUrl(QUrl url)
 {
@@ -76,9 +82,13 @@ void SpotifyAPI::searchTrackFinished()
 	auto items = trackResult.value("items").toArray();
 
 	total = trackResult.value("total").toInt();
+	offset = trackResult.value("offset").toInt();
+
 	nextUrl.clear();
 	if (!trackResult.value("next").isNull())
 		nextUrl.setUrl(trackResult.value("next").toString());
+	if (!trackResult.value("previous").isNull())
+		previousUrl.setUrl(trackResult.value("previous").toString());
 
 	for (int i = 0; i < items.size() ; i++) {
 		auto track = Track(

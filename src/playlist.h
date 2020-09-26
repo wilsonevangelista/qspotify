@@ -22,6 +22,7 @@ public:
 	void setImgUrl(QString &value);
 
 	QUuid getUuid() const;
+	QByteArray toJSON();
 
 private:
 	QString name;

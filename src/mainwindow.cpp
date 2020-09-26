@@ -13,12 +13,6 @@ MainWindow::MainWindow(QWidget *parent):
 		statusBar()->showMessage("Token obtido!");
 		//spotify.searchMusic("Fear of the dark");
 	});
-
-	connect(&spotify, &SpotifyAPI::searchReturn, this, [=](QList<Track> &tracks){
-		foreach (auto track, tracks) {
-			qDebug() << QJsonDocument::fromJson(track.toJSON());
-		}
-	});
 }
 
 MainWindow::~MainWindow()
@@ -36,24 +30,22 @@ void MainWindow::on_btnAddPlaylist_pressed()
 		playlists.insert(pl.getUuid(), pl);
 		ui->cmbPlaylist->addItem(nomePlaylist, pl.getUuid());
 
-		int index = ui->cmbPlaylist->findData(pl.getUuid());
-		ui->cmbPlaylist->setCurrentIndex(index);
+		int idx = ui->cmbPlaylist->findData(pl.getUuid());
+		ui->cmbPlaylist->setCurrentIndex(idx);
 	}
 }
 
-void MainWindow::on_cmbPlaylist_currentIndexChanged(int index)
+void MainWindow::on_cmbPlaylist_currentIndexChanged(int idx)
 {
-	if(ui->cmbPlaylist->itemData(index).isNull()) return;
+	if(ui->cmbPlaylist->itemData(idx).isNull()) return;
 
-	QUuid uuid = ui->cmbPlaylist->itemData(index).toUuid();
-	statusBar()->showMessage("Selecionado: " + ui->cmbPlaylist->itemText(index));
+	QUuid uuid = ui->cmbPlaylist->itemData(idx).toUuid();
+	selectedPlaylist = &playlists.find(uuid).value();
+	QList<Track> tracks = selectedPlaylist->getTracks();
 
-	PlayList pl = playlists.find(uuid).value();
-	QList<Track> tracks = pl.getTracks();
+	statusBar()->showMessage("Selecionado: " + ui->cmbPlaylist->itemText(idx));
 
-	foreach (auto track, tracks) {
-		qDebug() << QJsonDocument::fromJson(track.toJSON());
-	}
+	updateSelectedPlaylist();
 }
 
 void MainWindow::on_btnDelPlaylist_pressed()
@@ -70,8 +62,32 @@ void MainWindow::on_btnDelPlaylist_pressed()
 	msgBox.setDefaultButton(QMessageBox::Yes);
 	int ret = msgBox.exec();
 	if(ret == QMessageBox::Yes) {
+		ui->playlistWidget->clear();
 		ui->cmbPlaylist->removeItem(idx);
-		ui->cmbPlaylist->setCurrentIndex(idx - 1);
+		ui->cmbPlaylist->setCurrentIndex( idx > 0 ? idx - 1 : 0);
+		selectedPlaylist = nullptr;
 		statusBar()->showMessage(plName + " removida!", 5000);
+	}
+}
+
+void MainWindow::on_pushButton_pressed()
+{
+	if (selectedPlaylist == nullptr){
+		QMessageBox::warning(this,"Atenção!", "Selecione uma Playlist", QMessageBox::Ok);
+	} else {
+		auto search = new PlayListManagerDialog(this);
+		search->exec();
+		delete search;
+		updateSelectedPlaylist();
+	}
+}
+
+void MainWindow::updateSelectedPlaylist()
+{
+	ui->playlistWidget->clear();
+	foreach (auto track, selectedPlaylist->getTracks()) {
+		auto item = new QListWidgetItem(track.toString());
+		item->setData(Qt::UserRole, QVariant::fromValue<Track>(track));
+		ui->playlistWidget->addItem(item);
 	}
 }

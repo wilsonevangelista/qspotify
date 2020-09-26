@@ -47,3 +47,5 @@ QUuid PlayList::getUuid() const
 {
 	return uuid;
 }
+
+

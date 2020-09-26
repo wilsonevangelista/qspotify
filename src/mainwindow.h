@@ -15,6 +15,7 @@
 #include "spotifyapi.h"
 #include "playlist.h"
 #include "track.h"
+#include "playlistmanagerdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,8 +29,8 @@ public:
 	MainWindow(QWidget *parent = nullptr);
 	~MainWindow();
 
-	void getUserInformation();
-	void getOnlinePlaylists();
+	PlayList *selectedPlaylist = nullptr;
+	SpotifyAPI spotify;
 
 private slots:
 	void on_btnAddPlaylist_pressed();
@@ -37,12 +38,14 @@ private slots:
 
 	void on_btnDelPlaylist_pressed();
 
+	void on_pushButton_pressed();
+
+	void updateSelectedPlaylist();
+
 private:
 	Ui::MainWindow *ui;
 	QString configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-
 	QMap<QUuid, PlayList> playlists;
-	SpotifyAPI spotify;
 };
 
 #endif // MAINWINDOW_H
