@@ -169,6 +169,9 @@
       </item>
       <item alignment="Qt::AlignHCenter">
        <widget class="QPushButton" name="btnPrev">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
           <horstretch>0</horstretch>
@@ -194,6 +197,9 @@
       </item>
       <item alignment="Qt::AlignHCenter">
        <widget class="QPushButton" name="btnPlay">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
           <horstretch>0</horstretch>
@@ -219,6 +225,9 @@
       </item>
       <item alignment="Qt::AlignHCenter">
        <widget class="QPushButton" name="btnNext">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
           <horstretch>0</horstretch>
@@ -244,6 +253,9 @@
       </item>
       <item alignment="Qt::AlignHCenter">
        <widget class="QPushButton" name="btnStop">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
           <horstretch>0</horstretch>

@@ -2,15 +2,16 @@
 #define PLAYLIST_H
 
 #include <QList>
+#include <QUuid>
 #include "track.h"
 
 class PlayList
 {
 public:
-	explicit PlayList();
+	explicit PlayList(QString name);
 	~PlayList();
 
-	QList<Track> *getTracks();
+	QList<Track> getTracks();
 	void addTrack(Track );
 	void delTrack(Track );
 
@@ -20,10 +21,13 @@ public:
 	QString getImgUrl();
 	void setImgUrl(QString &value);
 
+	QUuid getUuid() const;
+
 private:
 	QString name;
-	QList<Track> *tracks;
+	QList<Track> tracks;
 	QString imgUrl;
+	QUuid uuid;
 
 };
 

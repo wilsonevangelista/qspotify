@@ -18,6 +18,13 @@ void SpotifyAPI::searchMusic(QString query)
 	searchMusicWithUrl(searchTrackUrl);
 }
 
+void SpotifyAPI::searchNext()
+{
+	if (nextUrl.isEmpty()) return;
+	searchMusicWithUrl(nextUrl);
+}
+
+
 void SpotifyAPI::searchMusicWithUrl(QUrl url)
 {
 	auto req = QNetworkRequest(url);
@@ -66,10 +73,12 @@ void SpotifyAPI::searchTrackFinished()
 	auto root = document.object();
 
 	auto trackResult = root.value("tracks").toObject();
-	auto total = trackResult.value("total").toInt();
 	auto items = trackResult.value("items").toArray();
 
-	//auto nextUrl = trackResult.value("next");
+	total = trackResult.value("total").toInt();
+	nextUrl.clear();
+	if (!trackResult.value("next").isNull())
+		nextUrl.setUrl(trackResult.value("next").toString());
 
 	for (int i = 0; i < items.size() ; i++) {
 		auto track = Track(

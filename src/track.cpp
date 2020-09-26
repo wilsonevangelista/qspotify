@@ -10,6 +10,6 @@ QString Track::toString(){
 	return name + " - " + artist + " - " + album;
 }
 
-QString Track::toJSON(){
-	return "{ id: " + id +", name: " + name + ", artist: " + artist + ", album: " + album + ", preview_url: " + previewUrl + "}";
+QByteArray Track::toJSON(){
+	return QString("{ \"id\": \"" + id +"\", \"name\": \"" + name + "\", \"artist\": \"" + artist + "\", \"album\": \"" + album + "\", \"preview_url\": \"" + previewUrl + "\"}").toUtf8();
 }

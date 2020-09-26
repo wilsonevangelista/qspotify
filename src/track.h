@@ -10,7 +10,7 @@ public:
 	bool operator==(const Track& rhs){ return id == rhs.id; };
 
 	QString toString();
-	QString toJSON();
+	QByteArray toJSON();
 private:
 	QString id;
 	QString name;
