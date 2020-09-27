@@ -19,16 +19,12 @@ public:
 	QString getName();
 	void setName(QString &value);
 
-	QString getImgUrl();
-	void setImgUrl(QString &value);
-
 	QUuid getUuid() const;
 	QByteArray toJSON();
 
 private:
 	QString name;
 	QList<Track> tracks;
-	QString imgUrl;
 	QUuid uuid;
 
 };

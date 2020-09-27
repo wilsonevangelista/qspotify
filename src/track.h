@@ -17,6 +17,8 @@ public:
 
 	QString toString();
 	QByteArray toJSON();
+	QString getPreviewUrl() const;
+
 private:
 	QString id;
 	QString name;

@@ -13,3 +13,8 @@ QString Track::toString(){
 QByteArray Track::toJSON(){
 	return QString("{ \"id\": \"" + id +"\", \"name\": \"" + name + "\", \"artist\": \"" + artist + "\", \"album\": \"" + album + "\", \"preview_url\": \"" + previewUrl + "\"}").toUtf8();
 }
+
+QString Track::getPreviewUrl() const
+{
+    return previewUrl;
+}

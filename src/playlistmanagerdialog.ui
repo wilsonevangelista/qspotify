@@ -148,7 +148,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QListWidget" name="lstPlaylist"/>
+        <widget class="QListWidget" name="lstPlaylist">
+         <property name="dragEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::InternalMove</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="btnDelTrack">

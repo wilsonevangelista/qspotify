@@ -37,19 +37,23 @@ void PlayList::setName(QString &value)
 	name = value;
 }
 
-QString PlayList::getImgUrl()
-{
-	return imgUrl;
-}
-
-void PlayList::setImgUrl(QString &value)
-{
-	imgUrl = value;
-}
-
 QUuid PlayList::getUuid() const
 {
 	return uuid;
+}
+
+QByteArray PlayList::toJSON()
+{
+	auto ret = new QString("{ \"name\" : \"" + name +
+						   "\", \"uuid\": \"" + uuid.toString() +
+						   "\", \"tracks\" : [");
+
+	for (int i = 0; i < tracks.length(); i++) {
+		ret->append(tracks[i].toJSON());
+		if (i < tracks.length() - 1) ret->append(",");
+	}
+	ret->append("]}");
+	return ret->toUtf8();
 }
 
 

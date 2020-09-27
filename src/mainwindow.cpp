@@ -4,20 +4,43 @@
 
 MainWindow::MainWindow(QWidget *parent):
 	QMainWindow(parent),
-	ui(new Ui::MainWindow)
+	ui(new Ui::MainWindow),
+	player(new QMediaPlayer),
+	mediaPlaylist(new QMediaPlaylist())
 {
 	ui->setupUi(this);
 	statusBar()->showMessage("Obtendo token aguarde...");
 
+	player->setVolume(100);
+
+	connect(mediaPlaylist, &QMediaPlaylist::currentIndexChanged, this, [=](int idx){
+		ui->playlistWidget->setCurrentRow(idx);
+		ui->playlistWidget->update();
+
+		if(idx == 0)
+			ui->btnPrev->setEnabled(false);
+		else
+			ui->btnPrev->setEnabled(true);
+
+		if(idx == mediaPlaylist->mediaCount() - 1)
+			ui->btnNext->setEnabled(false);
+		else
+			ui->btnNext->setEnabled(true);
+
+	});
+
 	connect(&spotify, &SpotifyAPI::tokenOK, this, [=](QString token){
 		statusBar()->showMessage("Token obtido!");
-		//spotify.searchMusic("Fear of the dark");
 	});
+
 }
 
 MainWindow::~MainWindow()
 {
 	delete ui;
+	delete selectedPlaylist;
+	delete player;
+	delete mediaPlaylist;
 }
 
 void MainWindow::on_btnAddPlaylist_pressed()
@@ -41,7 +64,6 @@ void MainWindow::on_cmbPlaylist_currentIndexChanged(int idx)
 
 	QUuid uuid = ui->cmbPlaylist->itemData(idx).toUuid();
 	selectedPlaylist = &playlists.find(uuid).value();
-	QList<Track> tracks = selectedPlaylist->getTracks();
 
 	statusBar()->showMessage("Selecionado: " + ui->cmbPlaylist->itemText(idx));
 
@@ -62,10 +84,14 @@ void MainWindow::on_btnDelPlaylist_pressed()
 	msgBox.setDefaultButton(QMessageBox::Yes);
 	int ret = msgBox.exec();
 	if(ret == QMessageBox::Yes) {
+		QUuid uuid = ui->cmbPlaylist->itemData(idx).toUuid();
+
 		ui->playlistWidget->clear();
 		ui->cmbPlaylist->removeItem(idx);
+		playlists.remove(uuid);
 		ui->cmbPlaylist->setCurrentIndex( idx > 0 ? idx - 1 : 0);
-		selectedPlaylist = nullptr;
+
+		//selectedPlaylist = nullptr;
 		statusBar()->showMessage(plName + " removida!", 5000);
 	}
 }
@@ -90,4 +116,47 @@ void MainWindow::updateSelectedPlaylist()
 		item->setData(Qt::UserRole, QVariant::fromValue<Track>(track));
 		ui->playlistWidget->addItem(item);
 	}
+	on_btnStop_pressed();
+}
+
+void MainWindow::on_btnPlay_pressed()
+{
+	mediaPlaylist->clear();
+	foreach (auto track, selectedPlaylist->getTracks()) {
+		mediaPlaylist->addMedia(QUrl(track.getPreviewUrl()));
+	}
+
+	player->setPlaylist(mediaPlaylist);
+	player->play();
+	ui->btnStop->setEnabled(true);
+	ui->btnPlay->setEnabled(false);
+	ui->btnNext->setEnabled(true);
+	ui->btnPrev->setEnabled(false);
+}
+
+void MainWindow::on_btnStop_pressed()
+{
+	player->stop();
+	ui->btnStop->setEnabled(false);
+	ui->btnNext->setEnabled(false);
+	ui->btnPrev->setEnabled(false);
+
+	if(selectedPlaylist->getTracks().count() > 0){
+		ui->btnPlay->setEnabled(true);
+	}
+}
+
+void MainWindow::on_btnNext_pressed()
+{
+	mediaPlaylist->next();
+}
+
+void MainWindow::on_btnPrev_pressed()
+{
+	mediaPlaylist->previous();
+}
+
+void MainWindow::on_playlistWidget_itemClicked(QListWidgetItem *item)
+{
+	mediaPlaylist->setCurrentIndex( ui->playlistWidget->currentRow() );
 }

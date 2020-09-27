@@ -62,10 +62,13 @@ void PlayListManagerDialog::on_btnAdd_pressed()
 {
 	auto selected = ui->lstSearch->currentItem();
 	if(selected != nullptr){
+		if (selected->data(Qt::UserRole).value<Track>().getPreviewUrl().isEmpty()) {
+			QMessageBox::warning(this, "Atenção", "A musica selecionada não possui sample no Spotify");
+			return;
+		}
 		ui->lstPlaylist->addItem(selected->clone());
 		delete selected;
 		ui->lstPlaylist->update();
-		//qDebug() << selected->data(Qt::UserRole).value<Track>().toString();
 	}
 }
 

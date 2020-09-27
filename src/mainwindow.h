@@ -11,6 +11,10 @@
 #include <QJsonDocument>
 #include <QMap>
 #include <QList>
+#include <QListWidgetItem>
+
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 
 #include "spotifyapi.h"
 #include "playlist.h"
@@ -42,8 +46,20 @@ private slots:
 
 	void updateSelectedPlaylist();
 
+	void on_btnPlay_pressed();
+
+	void on_btnStop_pressed();
+
+	void on_btnNext_pressed();
+
+	void on_btnPrev_pressed();
+
+	void on_playlistWidget_itemClicked(QListWidgetItem *item);
+
 private:
 	Ui::MainWindow *ui;
+	QMediaPlayer *player;
+	QMediaPlaylist *mediaPlaylist;
 	QString configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 	QMap<QUuid, PlayList> playlists;
 };

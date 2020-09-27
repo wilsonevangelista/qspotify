@@ -86,7 +86,11 @@
      </layout>
     </item>
     <item>
-     <widget class="QListWidget" name="playlistWidget"/>
+     <widget class="QListWidget" name="playlistWidget">
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+     </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
