@@ -30,6 +30,17 @@ MainWindow::MainWindow(QWidget *parent):
 
 	});
 
+	connect(&spotify, &SpotifyAPI::error, this, [=](QString msg, bool isNetworkError){
+		QMessageBox::warning(this,"Atenção!", msg, QMessageBox::Ok);
+		if(isNetworkError){
+			ui->btnPlay->setEnabled(false);
+			ui->playlistWidget->setEnabled(false);
+		}
+
+		statusBar()->showMessage("Erro!");
+		ui->pushButton->setEnabled(false);
+	});
+
 	connect(&spotify, &SpotifyAPI::tokenOK, this, [=](QString token){
 		statusBar()->showMessage("Token obtido!");
 	});

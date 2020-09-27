@@ -30,7 +30,6 @@ void SpotifyAPI::searchPrevious()
 	searchMusicWithUrl(previousUrl);
 }
 
-
 void SpotifyAPI::searchMusicWithUrl(QUrl url)
 {
 	auto req = QNetworkRequest(url);
@@ -48,10 +47,19 @@ void SpotifyAPI::getToken(){
 
 	reply = qnam.post(req, body);
 	connect(reply, &QNetworkReply::finished, this, &SpotifyAPI::getTokenFinished);
+	connect(reply, &QNetworkReply::errorOccurred, this, &SpotifyAPI::networkError);
+}
+
+void SpotifyAPI::networkError(QNetworkReply::NetworkError err){
+	if (err == QNetworkReply::ProtocolInvalidOperationError) return;
+	netError = true;
+	emit error("Erro na conexão: " +
+			   QString(QMetaEnum::fromType<QNetworkReply::NetworkError>().valueToKey(err)), true);
 }
 
 void SpotifyAPI::getTokenFinished()
 {
+	if (netError) return;
 	const auto data = reply->readAll();
 	reply->deleteLater();
 	reply = nullptr;
@@ -65,11 +73,21 @@ void SpotifyAPI::getTokenFinished()
 	int expires_in = root.value("expires_in").toInt();
 	if (expires_in > 0)
 		expireTimer.start(expires_in * 1000);
-	emit tokenOK(accessToken);
+	if (accessToken.isEmpty()){
+		QString msg = "Não conseguiu obter token!\n";
+		if (!root.value("error").toString().isEmpty()){
+			msg.append("Samples salvos podem ser executados, mas gerenciar playlist será desabilitado.\n");
+			msg.append("Erro: " + root.value("error").toString());
+		}
+		emit error(msg, false);
+	} else {
+		emit tokenOK(accessToken);
+	}
 }
 
 void SpotifyAPI::searchTrackFinished()
 {
+	if (netError) return;
 	auto tracks = QList<Track>();
 	const auto data = reply->readAll();
 	reply->deleteLater();

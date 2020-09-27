@@ -2,6 +2,7 @@
 #define SPOTIFYAPI_H
 
 #include <QDebug>
+#include <QMetaEnum>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -33,6 +34,7 @@ private:
 	QNetworkReply *reply;
 	QString accessToken, tokenType;
 	QTimer expireTimer;
+	bool netError;
 
 
 	QUrl nextUrl = QUrl();
@@ -42,6 +44,7 @@ private:
 
 	void searchMusicWithUrl(QUrl );
 	void getToken();
+	void networkError(QNetworkReply::NetworkError err);
 
 private slots:
 	void getTokenFinished();
@@ -49,6 +52,7 @@ private slots:
 signals:
 	void tokenOK(QString);
 	void searchReturn(QList<Track> &);
+	void error(QString, bool);
 
 };
 

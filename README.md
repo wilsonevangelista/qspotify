@@ -1,2 +1,2 @@
 # QSpotify
-Qt Client using spotify Web API
+Qt Sample Client using spotify Web API
