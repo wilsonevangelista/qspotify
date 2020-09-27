@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent):
 	mediaPlaylist(new QMediaPlaylist())
 {
 	ui->setupUi(this);
+	loadPlaylists();
 	statusBar()->showMessage("Obtendo token aguarde...");
 
 	player->setVolume(100);
@@ -38,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent):
 MainWindow::~MainWindow()
 {
 	delete ui;
-	delete selectedPlaylist;
 	delete player;
 	delete mediaPlaylist;
 }
@@ -93,6 +93,7 @@ void MainWindow::on_btnDelPlaylist_pressed()
 
 		//selectedPlaylist = nullptr;
 		statusBar()->showMessage(plName + " removida!", 5000);
+		savePlaylists();
 	}
 }
 
@@ -105,6 +106,7 @@ void MainWindow::on_pushButton_pressed()
 		search->exec();
 		delete search;
 		updateSelectedPlaylist();
+		savePlaylists();
 	}
 }
 
@@ -159,4 +161,71 @@ void MainWindow::on_btnPrev_pressed()
 void MainWindow::on_playlistWidget_itemClicked(QListWidgetItem *item)
 {
 	mediaPlaylist->setCurrentIndex( ui->playlistWidget->currentRow() );
+}
+
+void MainWindow::savePlaylists()
+{
+	QFile file(filename);
+
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+		return;
+	QTextStream out(&file);
+	QString data = "[";
+
+	foreach (auto playlist, playlists) {
+		data.append(playlist.toJSON());
+		if (playlist.getUuid() != playlists.lastKey()) data.append(",");
+	}
+
+	data.append("]");
+
+	out << data;
+	file.close();
+
+}
+
+void MainWindow::loadPlaylists()
+{
+	QFile file(filename);
+
+	if (file.exists())
+	{
+		if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+		{
+			statusBar()->showMessage("Erro ao ler " + filename);
+			return;
+		}
+
+		QTextStream in(&file);
+
+		auto data = in.readAll().toUtf8();
+
+		auto doc = QJsonDocument::fromJson(data);
+		auto items = doc.array();
+		playlists.clear();
+
+		for (int i = 0; i < items.size() ; i++ )
+		{
+			//auto p = items[i].toVariant().value<PlayList>();
+			PlayList pl(items[i].toObject().value("name").toString(),
+						items[i].toObject().value("uuid").toString());
+			auto tracks = items[i].toObject().value("tracks").toArray();
+
+			for (auto t: tracks){
+				auto to = t.toObject();
+				pl.addTrack( Track(to.value("id").toString(),
+								   to.value("name").toString(),
+								   to.value("album").toString(),
+								   to.value("artist").toString(),
+								   to.value("preview_url").toString()));
+			}
+
+
+			playlists.insert(pl.getUuid(), pl);
+			ui->cmbPlaylist->addItem(pl.getName(), pl.getUuid());
+		}
+
+		file.close();
+
+	}
 }

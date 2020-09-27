@@ -8,7 +8,8 @@ int main(int argc, char *argv[])
 	MainWindow w;
 	w.show();
 
-	auto s = QGuiApplication::screens();
+	qRegisterMetaType<Track>();
+	qRegisterMetaType<PlayList>();
 
 	w.setGeometry(
 		QStyle::alignedRect(

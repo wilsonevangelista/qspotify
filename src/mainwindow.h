@@ -16,6 +16,8 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 
+#include <QFile>
+
 #include "spotifyapi.h"
 #include "playlist.h"
 #include "track.h"
@@ -60,8 +62,13 @@ private:
 	Ui::MainWindow *ui;
 	QMediaPlayer *player;
 	QMediaPlaylist *mediaPlaylist;
-	QString configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+	//QString configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+	QString filename = "playlists.json";
 	QMap<QUuid, PlayList> playlists;
+
+	void savePlaylists();
+	void loadPlaylists();
+
 };
 
 #endif // MAINWINDOW_H

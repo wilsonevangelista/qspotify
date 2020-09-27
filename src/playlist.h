@@ -8,8 +8,11 @@
 class PlayList
 {
 public:
-	explicit PlayList(QString name);
-	~PlayList();
+	explicit PlayList(QString name, QUuid uuid = nullptr);
+
+	PlayList() = default;
+	PlayList(const PlayList &) = default;;
+	~PlayList() = default;
 
 	QList<Track> getTracks();
 	void clearTracks();
@@ -28,5 +31,7 @@ private:
 	QUuid uuid;
 
 };
+
+Q_DECLARE_METATYPE(PlayList);
 
 #endif // PLAYLIST_H

@@ -1,11 +1,8 @@
 #include "playlist.h"
 
-PlayList::PlayList(QString name):
-	name(name), uuid(QUuid::createUuid())
+PlayList::PlayList(QString name, QUuid uuid):
+	name(name), uuid( uuid == nullptr ? QUuid::createUuid(): uuid)
 {
-}
-
-PlayList::~PlayList(){
 }
 
 QList<Track> PlayList::getTracks()
