@@ -66,6 +66,7 @@ void MainWindow::on_btnAddPlaylist_pressed()
 
 		int idx = ui->cmbPlaylist->findData(pl.getUuid());
 		ui->cmbPlaylist->setCurrentIndex(idx);
+		savePlaylists();
 	}
 }
 
