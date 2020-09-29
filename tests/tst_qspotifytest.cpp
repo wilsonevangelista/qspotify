@@ -4,6 +4,7 @@
 #include "track.h"
 #include "playlist.h"
 #include "spotifyapi.h"
+#include "playlistfilemanager.h"
 
 // add necessary includes here
 
@@ -37,6 +38,8 @@ private slots:
 	void playlist_json();
 	void playlist_json_track();
 	void playlist_name();
+
+	void playlistfile_test();
 
 };
 
@@ -116,6 +119,19 @@ void QSpotifyTest::playlist_name()
 	QVERIFY(p->getName() == ("teste"));
 }
 
+void QSpotifyTest::playlistfile_test()
+{
+	QString filename = "testesalvar.json";
+	QMap<QUuid, PlayList> pls;
+	pls.insert(uuid, *p);
+	PlaylistFileManager::savePlaylists(filename, pls);
+	auto plsptr = PlaylistFileManager::loadPlaylists(filename);
+	QVERIFY(plsptr != nullptr);
+	pls = *plsptr;
+	QVERIFY(pls.count(uuid) == 1);
+
+
+}
 
 QTEST_MAIN(QSpotifyTest)
 

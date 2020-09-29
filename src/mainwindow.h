@@ -22,6 +22,7 @@
 #include "playlist.h"
 #include "track.h"
 #include "playlistmanagerdialog.h"
+#include "playlistfilemanager.h"
 
 namespace Ui {
 class MainWindow;
@@ -65,10 +66,6 @@ private:
 	//QString configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 	QString filename = "playlists.json";
 	QMap<QUuid, PlayList> playlists;
-
-	void savePlaylists();
-	void loadPlaylists();
-
 };
 
 #endif // MAINWINDOW_H
