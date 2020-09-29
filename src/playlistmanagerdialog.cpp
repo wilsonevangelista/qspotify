@@ -19,7 +19,7 @@ PlayListManagerDialog::PlayListManagerDialog(QWidget *parent):
 		ui->lstPlaylist->addItem(item);
 	}
 
-	connect(spotify, &SpotifyAPI::searchReturn, this, [=](QList<Track> &tracks){
+	connect(spotify, &SpotifyAPI::searchReturn, this, [=](QList<Track> tracks){
 		ui->lstSearch->clear();
 		ui->labelTotal->setText("Mostrando do " + QString::number(spotify->offset) + " até  "
 								+ QString::number(20 + spotify->offset) + " de " + QString::number(spotify->total));

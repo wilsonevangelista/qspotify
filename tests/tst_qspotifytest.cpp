@@ -28,6 +28,7 @@ private slots:
 	void cleanupTestCase();
 
 	void spotify_token();
+	void spotify_search();
 
 	void track_json();
 	void track_string();
@@ -56,6 +57,16 @@ void QSpotifyTest::spotify_token()
 	QVERIFY(spy.wait());
 	QList<QVariant> arguments = spy.takeFirst();
 	QVERIFY(!arguments.at(0).toString().isEmpty());
+}
+
+void QSpotifyTest::spotify_search()
+{
+	QSignalSpy spy(s, SIGNAL(searchReturn(QList<Track>)));
+	s->searchMusic("Fear of the dark");
+	QVERIFY(spy.wait(20000));
+	QList<QVariant> arguments = spy.takeFirst();
+	QList<Track> tracks = qvariant_cast<QList<Track>>(arguments.at(0));
+	QVERIFY(!tracks.isEmpty());
 }
 
 void QSpotifyTest::initTestCase()

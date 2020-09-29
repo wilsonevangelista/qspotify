@@ -51,7 +51,7 @@ private slots:
 	void searchTrackFinished();
 signals:
 	void tokenOK(QString);
-	void searchReturn(QList<Track> &);
+	void searchReturn(QList<Track>);
 	void error(QString, bool);
 
 };
